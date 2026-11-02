@@ -7,7 +7,7 @@ description: Build an interactive 3D simulator of a real machine or mechanism (a
 
 One machine, one page. The visitor sees the thing run, presses a button, and the part doing the work opens up while the gauges around it read the real numbers. Left alone, the page tours itself with a cursor. The same code records a film of the tour, frame by frame, with a score built on the same timeline.
 
-`SKILL_DIR` below is the folder this file lives in. Builds and renders go to `./teardown-out` of the folder you run from.
+`SKILL_DIR` below is the folder this file lives in (for a Cursor install, usually `~/.cursor/skills/teardown`, `~/.agents/skills/teardown`, or `.cursor/skills/teardown` inside a project). Builds and renders go to `./teardown-out` of the folder you run from.
 
 ## First run
 
@@ -141,4 +141,4 @@ Checklist:
 
 ## Credits
 
-The kit, frame capture, sfx engine and review rules come from [whaleyxbt/claude-motion](https://github.com/whaleyxbt/claude-motion) (MIT). The recorded samples are CC0 from Freesound, trimmed by [Barty-Bart/motion-graphics](https://github.com/Barty-Bart/motion-graphics) (MIT); sources in `sfx/samples/SOURCES.md`.
+Cursor port by [bugeng777/teardown-cursor](https://github.com/bugeng777/teardown-cursor) of [elvarofficial/teardown](https://github.com/elvarofficial/teardown) (MIT). The kit, frame capture, sfx engine and review rules come from [whaleyxbt/claude-motion](https://github.com/whaleyxbt/claude-motion) (MIT). The recorded samples are CC0 from Freesound, trimmed by [Barty-Bart/motion-graphics](https://github.com/Barty-Bart/motion-graphics) (MIT); sources in `sfx/samples/SOURCES.md`.

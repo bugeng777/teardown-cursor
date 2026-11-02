@@ -1,8 +1,62 @@
-# teardown
+# teardown-cursor
 
-A Claude Code skill that turns any machine into a 3D simulator you can take apart.
+**Cursor Agent Skill 移植版 / A Cursor Agent Skill port of [elvarofficial/teardown](https://github.com/elvarofficial/teardown)**
 
-Ask how something works. Claude builds it as one offline HTML page: the machine runs in the middle, every panel around it reads the real numbers, a button opens the part doing the work, and when nobody touches it the page tours itself.
+> 本项目是 [elvarofficial/teardown](https://github.com/elvarofficial/teardown)（MIT 协议）的 Cursor 移植版，保留了原项目的全部代码、示例、提交历史和版权声明。原项目基于 [whaleyxbt/claude-motion](https://github.com/whaleyxbt/claude-motion)（MIT）。
+>
+> This repository is a port of [elvarofficial/teardown](https://github.com/elvarofficial/teardown) (MIT) for Cursor. All original code, examples, commit history and copyright notices are kept. The original is built on [whaleyxbt/claude-motion](https://github.com/whaleyxbt/claude-motion) (MIT).
+
+---
+
+## 中文说明
+
+把任何机器做成一个可以拆开看的 3D 模拟器。你问"这东西怎么工作"，Cursor 的 Agent 会生成一个离线可打开的 HTML 页面：机器在中间运转，四周的仪表盘读的是真实参数，按钮能把正在工作的部件剖开，没人操作时页面会自己巡游演示；同一套代码还能逐帧录成 60 fps 视频，并配上同步的程序化音效。
+
+### 在 Cursor 中安装
+
+方式一（推荐，使用 [skills CLI](https://www.npmjs.com/package/skills)，装到全局 `~/.agents/skills/teardown`，Cursor 会自动加载）：
+
+```
+npx skills add bugeng777/teardown-cursor -g -a cursor
+```
+
+方式二（手动克隆到 Cursor 的全局技能目录，文件夹名必须是 `teardown`，与 SKILL.md 中的 `name` 一致）：
+
+```
+git clone https://github.com/bugeng777/teardown-cursor ~/.cursor/skills/teardown
+```
+
+只想在某个项目里用：克隆到该项目的 `.cursor/skills/teardown`。
+
+然后在安装目录里执行一次：
+
+```
+npm install && npx playwright install chromium
+```
+
+需要 Node.js 20+；导出视频需要 `ffmpeg`，音效需要 Python 3。
+
+### 使用
+
+在 Cursor Agent 对话里直接说，Agent 会自动选用该技能；也可以输入 `/teardown` 手动调用：
+
+> 给我做一个可以拆开的四冲程摩托车发动机模拟器。
+
+> 机械表是怎么走时的？做成模拟器给我看。
+
+### 相比原项目改了什么
+
+- `README.md`：改为中英双语，安装说明改为 Cursor（`-a cursor` / `~/.cursor/skills/`）。
+- `SKILL.md`：补充 Cursor 下 `SKILL_DIR` 的常见位置，在致谢中注明移植来源。技能指令本身未改动。
+- `sfx/synth.py`：原项目把 ffmpeg 写死成作者本机的 Windows 路径（`C:\Users\user_\.claude\bin\ffmpeg.exe`），改为读取 `FFMPEG` 环境变量、默认 `ffmpeg`，与 `paths.mjs` 和 SKILL.md 的说明一致。
+- `package.json`：包名与描述。
+- `LICENSE`：保留原 MIT 全文和原版权行，追加移植修改的版权行。
+
+---
+
+## English
+
+Turns any machine into a 3D simulator you can take apart. Ask how something works and the Cursor agent builds one offline HTML page: the machine runs in the middle, every panel reads the real numbers, a button opens the part doing the work, and when nobody touches it the page tours itself. The same code records a 60 fps film with a synced procedural score.
 
 ![Mellis HB-7 robotic bee simulator](docs/bee.gif)
 
@@ -10,31 +64,35 @@ Ask how something works. Claude builds it as one offline HTML page: the machine 
 |---|---|
 | ![Telson SC-8 robotic scorpion](docs/scorpion.gif) | ![Pelagos OC-8 robotic octopus](docs/octopus.gif) |
 
-## Install
+### Install in Cursor
 
 ```
-npx skills add elvarofficial/teardown -g -a claude-code
+npx skills add bugeng777/teardown-cursor -g -a cursor
 ```
 
-Then, once, in the installed folder:
+or clone it straight into Cursor's skill folder (the folder must be named `teardown` to match the skill name):
+
+```
+git clone https://github.com/bugeng777/teardown-cursor ~/.cursor/skills/teardown
+```
+
+For one project only, clone into `<project>/.cursor/skills/teardown`. Then, once, in the installed folder:
 
 ```
 npm install && npx playwright install chromium
 ```
 
-You need Node.js 20 or newer. For the video you also need `ffmpeg`, and for the sound Python 3.
+Node.js 20 or newer. `ffmpeg` for video, Python 3 for sound.
 
-## Use
+### Use
 
-Ask Claude Code in plain words:
+Ask the Cursor agent in plain words (it picks the skill up automatically, or type `/teardown`):
 
 > Build me a simulator of a 4-stroke motorcycle engine I can take apart.
 
-> How does a mechanical watch keep time? Show me as a simulator.
-
 > Make a teardown of a hydraulic excavator arm and record a 20-second video of it.
 
-Or open one of the 3 examples first:
+Or open one of the 3 examples:
 
 ```
 node sims/build.mjs v8-live          # teardown-out/dist/v8-live.html
@@ -42,19 +100,29 @@ node sims/build.mjs cessna-live
 node sims/build.mjs strandbeest-live
 ```
 
-## What is inside
+### What changed from upstream
+
+- `README.md`: bilingual, Cursor install instructions.
+- `SKILL.md`: Cursor locations for `SKILL_DIR`, port credit. The skill's instructions are otherwise unchanged.
+- `sfx/synth.py`: ffmpeg was hard-coded to the upstream author's Windows path; it now reads `FFMPEG` (default `ffmpeg`), as `paths.mjs` and SKILL.md already document.
+- `package.json`: name and description.
+- `LICENSE`: original MIT text and copyright lines kept, one line added for the port.
+
+### What is inside
 
 | | |
 |---|---|
-| `SKILL.md` | What Claude reads: how a machine is built, the rules that make it look right, the review loop. |
+| `SKILL.md` | What the agent reads: how a machine is built, the rules that make it look right, the review loop. |
 | `sims/kit/` | Runtime, stage, shader warm-up. |
 | `sims/v8-*`, `sims/cessna-*`, `sims/strandbeest-*` | 3 complete machines. `-shared` is the machine, `-live` the page you drive, `-film` the recorded tour. |
 | `sims/build.mjs` | Bundles a machine into one HTML file, three.js and fonts inlined. |
 | `sims/capture.mjs` | Renders the film frame by frame to a 60 fps mp4, or to review sheets of stills. |
 | `sfx/`, `run_sfx.py` | Procedural sound on the film's timeline, mastered to −14 LUFS. |
 
-## Credits
+## Credits / 致谢
 
-Built on [whaleyxbt/claude-motion](https://github.com/whaleyxbt/claude-motion) (MIT): the runtime, frame capture, sound engine and review rules come from there. Recorded samples are CC0 from Freesound, prepared by [Barty-Bart/motion-graphics](https://github.com/Barty-Bart/motion-graphics); sources in `sfx/samples/SOURCES.md`.
+- Original skill / 原项目: [elvarofficial/teardown](https://github.com/elvarofficial/teardown) (MIT, © 2026 elvarofficial).
+- Built on / 基于: [whaleyxbt/claude-motion](https://github.com/whaleyxbt/claude-motion) (MIT, © 2026 whaleyxbt): runtime, frame capture, sound engine, review rules.
+- Recorded samples are CC0 from Freesound, prepared by [Barty-Bart/motion-graphics](https://github.com/Barty-Bart/motion-graphics) (MIT); sources in `sfx/samples/SOURCES.md`.
 
-MIT licence.
+MIT licence — see [LICENSE](LICENSE).
