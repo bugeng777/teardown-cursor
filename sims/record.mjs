@@ -60,8 +60,18 @@ const ff = spawn(FFMPEG, ['-loglevel', 'error', '-y', '-f', 'image2pipe', '-fram
   {stdio: ['pipe', 'inherit', 'inherit']});
 const t0 = Date.now();
 for (let i = 0; i < frames; i++) {
-  await draw(from + i / fps);
-  const buf = await page.screenshot({type: 'jpeg', quality: 94});
+  // a stalled screenshot (the VM paused, a GC storm) gets the frame redrawn and retried instead of killing the run
+  let buf;
+  for (let a = 0; ; a++) {
+    try {
+      await draw(from + i / fps);
+      buf = await page.screenshot({type: 'jpeg', quality: 94, timeout: 120000});
+      break;
+    } catch (e) {
+      if (a >= 3) throw e;
+      console.error(`frame ${i}: ${e.message.split('\n')[0]}, retrying`);
+    }
+  }
   if (!ff.stdin.write(buf)) await new Promise((r) => ff.stdin.once('drain', r));
   if (i % fps === 0) console.log(`${i}/${frames} frames ${((Date.now() - t0) / 1000).toFixed(0)} s`);
 }
