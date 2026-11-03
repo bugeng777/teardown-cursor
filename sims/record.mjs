@@ -56,7 +56,7 @@ const from = Number(opt('from', 0));
 const to = Number(opt('to', info.duration));
 const frames = Math.round((to - from) * fps);
 const ff = spawn(FFMPEG, ['-loglevel', 'error', '-y', '-f', 'image2pipe', '-framerate', String(fps), '-i', '-',
-  '-c:v', 'libx264', '-preset', 'medium', '-crf', String(opt('crf', 18)), '-pix_fmt', 'yuv420p', '-r', String(fps), '-movflags', '+faststart', out],
+  '-c:v', 'libx264', '-preset', 'medium', '-crf', String(opt('crf', 18)), '-vf', 'scale=in_range=pc:out_range=tv,format=yuv420p', '-color_range', 'tv', '-r', String(fps), '-movflags', '+faststart', out],
   {stdio: ['pipe', 'inherit', 'inherit']});
 const t0 = Date.now();
 for (let i = 0; i < frames; i++) {

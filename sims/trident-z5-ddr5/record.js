@@ -287,7 +287,7 @@ void main(){
     }
     el.innerHTML = `<h5>${cfg.h5}</h5><h6>${cfg.h6}</h6><div class="c"></div>`;
     const ch = echarts.init(el.querySelector('.c'), null, {renderer: 'canvas', devicePixelRatio: 1});
-    const max = Math.max(...cfg.vals) * 1.25;
+    const max = Math.max(...cfg.vals) * 1.6; // room for the value label
     gsap.set(el, {autoAlpha: 0});
     tl.fromTo(el, {autoAlpha: 0, y: 40, scale: 0.97}, {autoAlpha: 1, y: 0, scale: 1, duration: 0.5, ease: 'power3.out'}, c.t0);
     tl.to(el, {autoAlpha: 0, y: -20, duration: 0.3, ease: 'power2.in'}, c.t1 - 0.3);
