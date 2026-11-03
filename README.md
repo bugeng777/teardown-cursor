@@ -44,6 +44,21 @@ npm install && npx playwright install chromium
 
 > 机械表是怎么走时的？做成模拟器给我看。
 
+### 录制模式（做短视频用）
+
+`trident-z5-ddr5.html?record=1&ratio=9x16&subs=zh-en`（竖屏、中英双字幕）或 `?record=1&ratio=16x9&subs=en`（横屏、英文字幕）。
+这个模式会隐藏所有按钮和面板，按固定脚本运镜，字幕放在平台安全区内，开头 10 秒先给出钩子问题和答案。
+画面全部是 HTML / CSS / WebGL 生成：转场用 gl-transitions，文字动画用 GSAP，图表用 ECharts。可以逐帧导出：
+
+```
+node sims/build.mjs trident-z5-ddr5 trident-z5-ddr5-record
+node sims/record.mjs trident-z5-ddr5-record --ratio 9x16 --subs zh-en --out short.mp4 --timeline short.json
+python run_sfx.py sims/trident-z5-ddr5-record/score.py --timeline short.json --out short.wav
+ffmpeg -i short.mp4 -i short.wav -map 0:v -map 1:a -c:v copy -c:a aac -shortest out.mp4
+```
+
+脚本在 `sims/trident-z5-ddr5/record-script.js`，第三方许可见 `sims/trident-z5-ddr5-record/CREDITS.md`。
+
 ### 相比原项目改了什么
 
 - `README.md`：改为中英双语，安装说明改为 Cursor（`-a cursor` / `~/.cursor/skills/`）。
@@ -99,6 +114,14 @@ node sims/build.mjs v8-live          # teardown-out/dist/v8-live.html
 node sims/build.mjs cessna-live
 node sims/build.mjs strandbeest-live
 ```
+
+### Record mode (for short videos)
+
+`trident-z5-ddr5.html?record=1&ratio=9x16|16x9&subs=zh-en|en` hides every control and plays a fixed camera script, with
+subtitles burned in inside the platform safe areas and a hook question answered in the first 10 s. Every frame is
+HTML/CSS/WebGL: gl-transitions for the cuts, GSAP for the type, ECharts for the charts. `render(t)` is pure, so
+`node sims/record.mjs trident-z5-ddr5-record --ratio 9x16 --out x.mp4` steps it frame by frame; ffmpeg only encodes.
+See `sims/trident-z5-ddr5-record/CREDITS.md`.
 
 ### What changed from upstream
 

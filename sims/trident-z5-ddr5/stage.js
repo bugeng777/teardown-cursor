@@ -78,7 +78,7 @@ export function createStage({canvas}) {
     camera.updateProjectionMatrix();
   };
   // cam: target (tx, ty, tz), azimuth from +z toward +x, elevation, distance (radians, world units), sx/sy shift
-  const frame = (state, cam) => {
+  const frame = (state, cam, target = null) => {
     mod.update(state);
     const inst = state.mode === 'install';
     board.root.visible = inst;
@@ -111,7 +111,9 @@ export function createStage({canvas}) {
     camera.lookAt(tx, ty, tz);
     camera.setViewOffset(size.w, size.h, -(cam.sx ?? 0), -(cam.sy ?? 0), size.w, size.h);
     camera.updateMatrixWorld();
+    renderer.setRenderTarget(target);
     renderer.render(scene, camera);
+    if (target) renderer.setRenderTarget(null);
   };
   const st = {};
   const pv = new THREE.Vector3();
